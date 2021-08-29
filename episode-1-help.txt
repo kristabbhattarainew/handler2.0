@@ -1,0 +1,86 @@
+const Discord = require('discord.js');
+const disbut = require("discord-buttons");
+const { MessageMenuOption, MessageMenu } = require("discord-buttons");
+
+
+module.exports = {
+  name: "help1",
+   aliases: ["hlp1"],
+  run: async (client, message, args ) => {
+      //--------------------------------------S T A R T---------------------------------------
+
+        const embed = new Discord.MessageEmbed()
+        .setDescription("Click the menu below to view help menu!");
+
+        const embed1 = new Discord.MessageEmbed()
+        .setColor("GREEN")
+        .setDescription("Hlep 1");
+
+        const embed2 = new Discord.MessageEmbed()
+        .setColor("BLUE")
+        .setDescription("Hlep 2");
+
+        const embed3 = new Discord.MessageEmbed()
+        .setColor("RED")
+        .setDescription("Hlep 3");
+
+
+        //-----------------------------OPTIONS----------------------
+
+        let option1 = new MessageMenuOption()
+        .setLabel('Help Menu 1')
+        .setEmoji('1️⃣')
+        .setValue('option1')
+        .setDescription('This is just a help menu number 1')
+
+        let option2 = new MessageMenuOption()
+        .setLabel('Help Menu 2')
+        .setEmoji('2️⃣')
+        .setValue('option2')
+        .setDescription('This is just a help menu number 2')
+
+        let option3 = new MessageMenuOption()
+        .setLabel('Help Menu 3')
+        .setEmoji('3️⃣')
+        .setValue('option3')
+        .setDescription('This is just a help menu number 3')
+        
+    let select = new MessageMenu()
+        .setID('selector')
+        .setPlaceholder('Click here to view the help menu!')
+        .setMaxValues(1)
+        .setMinValues(1)
+        .addOptions(option1, option2, option3)
+
+        //-----------------------------OPTIONS----------------------
+    
+    const Sendmenu = await message.channel.send(embed, select);
+
+    const filter = ( button ) => button.clicker.user.id === message.author.id; //if only the message author click thenit will work
+    let collector = Sendmenu.createMenuCollector(filter, { time : 10000 });
+
+    collector.on("collect" , (b) => {
+        if(b.values[0] == "option1") {
+            Sendmenu.edit(embed1, select)
+        }
+
+        if(b.values[0] == "option2") {
+            Sendmenu.edit(embed2, select)
+        }
+
+        if(b.values[0] == "option3") {
+            Sendmenu.edit(embed3, select)
+        }
+
+        b.reply.defer();
+    })
+
+    collector.on("end", (b) => {
+        Sendmenu.edit("This help menu is expired! Please retype the command to view again.")
+    })
+
+
+
+       //---------------------------------------E N D----------------------------------------
+    }
+  };
